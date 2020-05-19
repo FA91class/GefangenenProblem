@@ -260,3 +260,5 @@
 <span class="c2">Die Aufgabe ist es nun, das jedes Gruppenmitglied 1 Strategie schreibt, also bei 3 Mitgliedern 3 Strategien, welches einen Gefangenen darstellt. D.h. die Strategie muss jede Runde gegen die andere Strategie entscheiden, ob es gestehen/kooperien oder abstreiten/verraten will. Damit dies umsetzbar ist, sollen Sie sich an die vorgebenene Implementierung der Methoden halten und ein passenden Verwaltungsrogramm schreiben. Im Anhang existiert ein Rumpfprogramm, welches Sie als Basis verwenden sollen. Beachten Sie auch die Hinweise.</span>
 
 <span class="c18"></span>
+
+<a href="https://ls11-www.cs.tu-dortmund.de/_media/techreports/tr06-11.pdf" target="_blank">Paper</a>
