@@ -20,7 +20,8 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie1());
             _strategien.Add(new Strategie2());
             _strategien.Add(new Strategie3());
-            
+            _strategien.Add(new Strategie_Jonas_Pfalzgraf());
+
             string eingabe = null;
             do
             {
