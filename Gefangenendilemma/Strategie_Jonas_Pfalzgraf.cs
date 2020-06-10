@@ -1,4 +1,5 @@
 using Gefangenendilemma.Basis;
+using System;
 
 namespace Gefangenendilemma
 {
@@ -18,46 +19,52 @@ namespace Gefangenendilemma
 
         public override void Start(int runde, int schwere)
         {
-            _displeasure = reactionEngineStartup(runde, schwere);
+            _displeasure = ReactionEngineStartup(runde, schwere);
         }
 
         public override int Verhoer(int letzteReaktion)
         {
-
-            return reactionEngineReaction(letzteReaktion, _displeasure);
+            return ReactionEngineReaction(letzteReaktion, _displeasure);
         }
 
-        private static bool reactionEngineStartup(int round, int weight)
+        private static bool ReactionEngineStartup(int round, int weight)
         {
             int result;
             bool resultBool;
 
-            result = round * (weight + 1337);
-
-            while (result > round)
+            if (round > 20)
             {
-                result -= 2;
-            }
+                result = round * (weight + 42);
 
-            if (result % 2 == 0)
-            {
-                resultBool = true;
+                while (result > round)
+                {
+                    result -= 2;
+                }
+
+                if (result % 2 == 0)
+                {
+                    resultBool = false;
+                }
+                else
+                {
+                    resultBool = true;
+                }
             }
             else
             {
-                resultBool = false;
+                resultBool = true;
             }
 
             return resultBool;
         }
 
-        private static int reactionEngineReaction(int letzteReaktion, bool mood)
+        private static int ReactionEngineReaction(int letzteReaktion, bool mood)
         {
             int reaktion;
 
             if (letzteReaktion != Verrat)
             {
-                reaktion = Verrat;
+                reaktion = Kooperieren;
             }
             else
             {

@@ -17,10 +17,9 @@ namespace Gefangenendilemma
             _strategien = new List<BasisStrategie>();
             _strategien.Add(new GrollStrategie());
             _strategien.Add(new VerrateImmerStrategie());
-            _strategien.Add(new Strategie1());
-            _strategien.Add(new Strategie2());
-            _strategien.Add(new Strategie3());
             _strategien.Add(new Strategie_Jonas_Pfalzgraf());
+            _strategien.Add(new Strategie2());
+            _strategien.Add(new Strategie3());            
 
             string eingabe = null;
             do
