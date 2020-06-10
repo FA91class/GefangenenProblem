@@ -4,10 +4,13 @@ using Gefangenendilemma.Basis;
 
 namespace Gefangenendilemma
 {
+    /// <summary>
+    /// Diese Klasse können Sie beliebig umschreiben, jenachdem welche Tasks sie erledigen.
+    /// </summary>
     class VerwaltungProgramm
     {
         /// <summary>
-        /// Diese Liste enthält alle Gefangene/Strategien
+        /// Diese Liste(Collection) enthält alle Gefangene/Strategien
         /// </summary>
         private static List<BasisStrategie> _strategien;
         
@@ -19,14 +22,14 @@ namespace Gefangenendilemma
             _strategien.Add(new VerrateImmerStrategie());
             _strategien.Add(new Strategie_Jonas_Pfalzgraf());
             _strategien.Add(new Strategie2());
-            _strategien.Add(new Strategie3());            
-
-            string eingabe = null;
+            _strategien.Add(new Strategie3());
+            
+            string eingabe;
             do
             {
                 // Begrüßung
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
-                Console.WriteLine("0 - Verhör zwischen 2 Gefangene");
+                Console.WriteLine("0 - Verhör zwischen 2 Strategien");
                 Console.WriteLine("X - Beenden");
                 
                 // Eingabe
@@ -34,12 +37,11 @@ namespace Gefangenendilemma
                 eingabe = Console.ReadLine();
 
                 // Auswerten der Eingabe
-                switch (eingabe)
+                switch (eingabe.ToLower())
                 {
                     case "0":
                         Gefangene2();
                         break;
-                    case "x":
                     case "X":
                         break;
                     default:
@@ -49,6 +51,9 @@ namespace Gefangenendilemma
             } while (!"x".Equals(eingabe?.ToLower()));
         }
 
+        /// <summary>
+        /// Fragt 2 Strategien, Länge und Schwere ab.
+        /// </summary>
         static void Gefangene2()
         {
             int st1, st2;
@@ -59,11 +64,11 @@ namespace Gefangenendilemma
             {
                 Console.WriteLine($"{i} - {_strategien[i].Name()}");
             }
-            Console.WriteLine("Wählen Sie ihre 2 Gefangene:");
+            Console.WriteLine("Wählen Sie ihre 2 Strategien:");
             st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
-            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (2=schwer)", 2, 3);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (2=schwer)", 0, 3);
             
             Verhoer(st1, st2, runde, schwere);
         }
@@ -80,6 +85,8 @@ namespace Gefangenendilemma
             //holt die beiden Strategien aus der Collection.
             BasisStrategie strategie1 = _strategien[st1];
             BasisStrategie strategie2 = _strategien[st2];
+
+            //setzt Startwerte
             int reaktion1 = BasisStrategie.NochNichtVerhoert;
             int reaktion2 = BasisStrategie.NochNichtVerhoert;
             int punkte1 = 0, punkte2 = 0;
@@ -108,7 +115,15 @@ namespace Gefangenendilemma
             //ausgabe
             Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
             Console.WriteLine($"{strategie2.Name()} hat {punkte2} Punkte erhalten.");
-            Console.WriteLine("Somit hat {0} gewonnen.",punkte1 < punkte2 ? strategie1.Name(): strategie2.Name());
+            if (punkte1 < punkte2)
+            {
+                Console.WriteLine("Somit hat {0} gewonnen.", strategie1.Name());
+            } 
+            else
+            {
+                Console.WriteLine("Somit hat {0} gewonnen.", strategie2.Name());
+            }
+            
         }
 
         /// <summary>
@@ -122,26 +137,25 @@ namespace Gefangenendilemma
         {
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
             {
-                punkte1 += 8;
-                punkte2 += 8;
+                punkte1 += 4;
+                punkte2 += 4;
+                return;
             } 
-            else
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
-            {
-                punkte1 += 10;
-                punkte2 += 0;
-            } 
-            else
-            if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
                 punkte1 += 0;
                 punkte2 += 10;
+                return;
             }
-            else
+            if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
-                punkte1 += 4;
-                punkte2 += 4;
+                punkte1 += 10;
+                punkte2 += 0;
+                return;
             }
+            
+            punkte1 += 8;
+            punkte2 += 8;
             
         }
     }
