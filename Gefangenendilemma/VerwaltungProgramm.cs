@@ -68,7 +68,7 @@ namespace Gefangenendilemma
             st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
-            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (2=schwer)", 0, 3);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", -1, 3);
             
             Verhoer(st1, st2, runde, schwere);
         }
@@ -104,9 +104,22 @@ namespace Gefangenendilemma
                 int aktReaktion1 = strategie1.Verhoer(reaktion2);
                 int aktReaktion2 = strategie2.Verhoer(reaktion1);
 
-                //punkte berechnen
-                VerhoerSchwerPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                
+                //punkte berechnen                
+                switch (schwere)
+                {
+                    case 0:
+                        VerhoerLeichtPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+
+                    case 1:
+                        VerhoerMittelPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+
+                    case 2:
+                        VerhoerSchwerPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+                }
+
                 //reaktion für den nächsten durchlauf merken
                 reaktion1 = aktReaktion1;
                 reaktion2 = aktReaktion2;
@@ -157,6 +170,72 @@ namespace Gefangenendilemma
             punkte1 += 8;
             punkte2 += 8;
             
+        }
+
+        /// <summary>
+        /// Berechnet für mittlere Verstöße die Punkte und verwendet die 2 letzten Eingabeparameter als Rückgabe
+        /// </summary>
+        /// <param name="aktReaktion1"></param>
+        /// <param name="aktReaktion2"></param>
+        /// <param name="punkte1"></param>
+        /// <param name="punkte2"></param>
+        static void VerhoerMittelPunkte(int aktReaktion1, int aktReaktion2, ref int punkte1, ref int punkte2)
+        {
+            if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
+            {
+                punkte1 += 3;
+                punkte2 += 3;
+                return;
+            }
+            if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
+            {
+                punkte1 += 0;
+                punkte2 += 5;
+                return;
+            }
+            if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
+            {
+                punkte1 += 5;
+                punkte2 += 0;
+                return;
+            }
+
+            punkte1 += 6;
+            punkte2 += 6;
+
+        }
+
+        /// <summary>
+        /// Berechnet für leichte Verstöße die Punkte und verwendet die 2 letzten Eingabeparameter als Rückgabe
+        /// </summary>
+        /// <param name="aktReaktion1"></param>
+        /// <param name="aktReaktion2"></param>
+        /// <param name="punkte1"></param>
+        /// <param name="punkte2"></param>
+        static void VerhoerLeichtPunkte(int aktReaktion1, int aktReaktion2, ref int punkte1, ref int punkte2)
+        {
+            if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
+            {
+                punkte1 += 1;
+                punkte2 += 1;
+                return;
+            }
+            if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
+            {
+                punkte1 += 0;
+                punkte2 += 2;
+                return;
+            }
+            if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
+            {
+                punkte1 += 2;
+                punkte2 += 0;
+                return;
+            }
+
+            punkte1 += 2;
+            punkte2 += 2;
+
         }
     }
 }
