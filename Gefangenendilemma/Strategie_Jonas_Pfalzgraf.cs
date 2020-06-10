@@ -64,7 +64,7 @@ namespace Gefangenendilemma
 
             if (letzteReaktion != Verrat)
             {
-                reaktion = Verrat;
+                reaktion = Kooperieren;
             }
             else
             {
