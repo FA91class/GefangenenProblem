@@ -27,6 +27,9 @@ namespace Gefangenendilemma
             return ReactionEngineReaction(letzteReaktion, _displeasure);
         }
 
+        /// <summary>
+        /// Methode zum Ermitteln der aktuellen Stimmung, abhängig von der anzahl der Runden und der Schwäre des Verstoßes
+        /// </summary>
         private static bool ReactionEngineStartup(int round, int weight)
         {
             int result;
@@ -58,8 +61,12 @@ namespace Gefangenendilemma
             return resultBool;
         }
 
+        /// <summary>
+        /// Diese Methode bestimmt die Reaktion auf die vorhergegangene Situation.
+        /// </summary>
         private static int ReactionEngineReaction(int letzteReaktion, bool mood)
         {
+            // art der Reaktion
             int reaktion;
 
             if (letzteReaktion != Verrat)
@@ -78,6 +85,7 @@ namespace Gefangenendilemma
                 }
             }
 
+            //Rückgabe der Reaktion
             return reaktion;
         }
     }

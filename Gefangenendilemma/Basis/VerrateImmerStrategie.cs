@@ -1,6 +1,12 @@
+//////////////////////////
+// In dieser Datei finden Sie eine Beispielstrategie,
+// die notwendig zum Ausführen, aber nicht zum Verstehen ist.
+// Hier nichts anpassen.
+//////////////////////////
+
 using Gefangenendilemma.Basis;
 
-namespace Gefangenendilemma
+namespace Gefangenendilemma.Basis
 {
     public class VerrateImmerStrategie : BasisStrategie
     {
