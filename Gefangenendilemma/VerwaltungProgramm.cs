@@ -183,25 +183,25 @@ namespace Gefangenendilemma
         {
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
             {
-                punkte1 += 3;
-                punkte2 += 3;
+                punkte1 += 10;
+                punkte2 += 10;
                 return;
             }
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
             {
-                punkte1 += 0;
-                punkte2 += 5;
+                punkte1 += 8;
+                punkte2 += 0;
                 return;
             }
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
-                punkte1 += 5;
-                punkte2 += 0;
+                punkte1 += 0;
+                punkte2 += 8;
                 return;
             }
 
-            punkte1 += 6;
-            punkte2 += 6;
+            punkte1 += 4;
+            punkte2 += 4;
 
         }
 
@@ -216,25 +216,25 @@ namespace Gefangenendilemma
         {
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
             {
-                punkte1 += 1;
-                punkte2 += 1;
+                punkte1 += 3;
+                punkte2 += 3;
                 return;
             }
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
             {
                 punkte1 += 0;
-                punkte2 += 2;
+                punkte2 += 9;
                 return;
             }
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
-                punkte1 += 2;
+                punkte1 += 9;
                 punkte2 += 0;
                 return;
             }
 
-            punkte1 += 2;
-            punkte2 += 2;
+            punkte1 += 6;
+            punkte2 += 6;
 
         }
     }
