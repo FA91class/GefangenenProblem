@@ -31,6 +31,7 @@ namespace Gefangenendilemma
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Strategien");
                 Console.WriteLine("1 - 2 Strategien die 9 Spiele gegenander spielen und erst dann wird der Sieger gekürt");
+                Console.WriteLine("2 - Verhör zwischen 2 Strategien mit Sieges-Chancen Analyse");
                 Console.WriteLine("X - Beenden");
                 
                 // Eingabe
@@ -77,6 +78,9 @@ namespace Gefangenendilemma
             Verhoer(st1, st2, runde, schwere);
         }
 
+        /// <summary>
+        /// Fragt 2 Strategien und Schwere ab und spielt ein best of nine.
+        /// </summary>
         static void BestOfNine()
         {
             int st1, st2;
@@ -105,6 +109,8 @@ namespace Gefangenendilemma
         /// <param name="schwere"></param>
         static void Verhoer(int st1, int st2, int runde, int schwere)
         {
+            string _winRateProof;
+
             //holt die beiden Strategien aus der Collection.
             BasisStrategie strategie1 = _strategien[st1];
             BasisStrategie strategie2 = _strategien[st2];
