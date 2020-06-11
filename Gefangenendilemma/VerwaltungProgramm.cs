@@ -30,6 +30,7 @@ namespace Gefangenendilemma
                 // Begrüßung
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Strategien");
+                Console.WriteLine("1 - 2 Strategien die 9 Spiele gegenander spielen und erst dann wird der Sieger gekürt");
                 Console.WriteLine("X - Beenden");
                 
                 // Eingabe
@@ -41,6 +42,9 @@ namespace Gefangenendilemma
                 {
                     case "0":
                         Gefangene2();
+                        break;
+                    case "1":
+                        BestOfNine();
                         break;
                     case "X":
                         break;
@@ -68,9 +72,28 @@ namespace Gefangenendilemma
             st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
-            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", -1, 3);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
             
             Verhoer(st1, st2, runde, schwere);
+        }
+
+        static void BestOfNine()
+        {
+            int st1, st2;
+            int schwere;
+
+            Console.WriteLine("Willkommen zum Best of 9 zwischen 2 Strategien");
+            for (int i = 0; i < _strategien.Count; i++)
+            {
+                Console.WriteLine($"{i} - {_strategien[i].Name()}");
+            }
+
+            Console.WriteLine("Wählen Sie ihre 2 Strategien:");
+            st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
+            st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
+
+            Verhoer(st1, st2, 9, schwere);
         }
 
         /// <summary>
