@@ -25,6 +25,7 @@ namespace Gefangenendilemma
 
         public override int Verhoer(int letzteReaktion)
         {
+            _decision.SetLastDecision(letzteReaktion);
             return _decision.GetResult();
         }
     }

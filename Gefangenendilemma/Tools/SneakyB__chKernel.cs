@@ -8,7 +8,7 @@ namespace Gefangenendilemma.Tools
     class SneakyB__chKernel
     {
         private int _decision;
-        private int _lastDecisoin;
+        private int _lastDecision;
         private int _round;
         private int _weight;
         private int _mood;
@@ -33,75 +33,91 @@ namespace Gefangenendilemma.Tools
             this._weight = weight;
         }
 
-        private int Verrat()
+        private int Betray()
         {
-            _mood += 1;
+            _mood  += 1;
             return BasisStrategie.Verrat;
+        }
+
+        private int Cooperate()
+        {
+            _mood -= 1;
+            return BasisStrategie.Kooperieren;
+        }
+
+        public void SetLastDecision(int lastDecision)
+        {
+            this._lastDecision = lastDecision;
+        }
+
+        private void CheckForTraitor()
+        {            
+            if (_lastDecision == BasisStrategie.Verrat)
+            {
+                _mood += 1;
+            }
         }
 
         private void Thinking()
         {
+            CheckForTraitor();
             switch (_round)
             {
                 case 0:
 
-                    _decision = BasisStrategie.Kooperieren;
+                    _decision = Betray();
 
                     break;
 
-                case int exp when _round <= 25:
+                case int _ when _round <= 25:
 
-                    if (_weight == 1)
+                    if (_weight == BasisStrategie.VMittel)
                     {
-                        _decision = BasisStrategie.Kooperieren;
+                        _decision = Cooperate();
                     }
-                    else if (_lastDecisoin == BasisStrategie.Verrat && _weight > 1)
+                    else if (_lastDecision == BasisStrategie.Verrat)
                     {
-                        _decision = BasisStrategie.Kooperieren;                        
+                        _decision = Betray();                       
                     }
                     else
                     {
-                        _decision = Verrat();
+                        _decision = Cooperate();
                     }
 
                     break;
-                case int exp when _round <= 50 && _round > 25:
+                case int _ when _round <= 50 && _round > 25:
 
-                    if (_weight == 1)
+                    if (_weight == BasisStrategie.VMittel)
                     {
-                        _decision = BasisStrategie.Kooperieren;
+                        _decision = Cooperate();
                     }
-                    else if (_lastDecisoin == BasisStrategie.Verrat && _weight > 1)
+                    else if (_lastDecision == BasisStrategie.Verrat && _weight > 1)
                     {
-                        _decision = BasisStrategie.Kooperieren;                        
+                        _decision = Betray();
                     }
-                    else if (_mood >= 15)
+                    else if (_mood >= _round * 0.15)
                     {
-                        _decision = BasisStrategie.Kooperieren;
+                        _decision = Betray();
                     }
                     else
                     {
-                        _decision = Verrat();
+                        _decision = Cooperate();
                     }
 
                     break;
-                case int exp when _round <= 100 && _round > 50:
+                case int _ when _round <= 100 && _round > 50:
 
-                    if (_weight == 1)
+                    if (_weight == BasisStrategie.VMittel)
                     {
-                        _decision = BasisStrategie.Kooperieren;
+                        _decision = Cooperate();
                     }
-                    else if (_lastDecisoin == BasisStrategie.Verrat)
+                    else if (_lastDecision == BasisStrategie.Verrat && _mood >= _round * 0.50)
                     {
-                        _decision = Verrat();
-                    }
-                    else if (_mood >= 40)
-                    {
-                        _decision = Verrat();
+                        _decision = Betray();
                     }
                     else
                     {
-                        _decision = BasisStrategie.Kooperieren;
+                        _decision = Cooperate();
                     }
 
                     break;
