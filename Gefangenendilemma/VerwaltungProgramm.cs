@@ -106,6 +106,7 @@ namespace Gefangenendilemma
         static void TournamentMode()
         {
             int[] punkte = new int[] { 0, 0, 0 };
+            List<object[]> statistics = new List<object[]>();
             int st1 = 2; //_strategien[2]
             int st2 = 3; //_strategien[3]
             int st3 = 4; //_strategien[4]
@@ -119,18 +120,21 @@ namespace Gefangenendilemma
                     punkte1u2 = GetPunkteFromVerhoer(st1, st2, 5, i);
                     punkte[0] += punkte1u2[0] * 20;
                     punkte[1] += punkte1u2[1] * 20;
+                    statistics.Add(new object[] { "Strategie 1 vs. Strategie 2 (leicht)", punkte1u2[0] * 20, punkte1u2[1] * 20 });
                 }
                 else if (i == 1)
                 {
                     punkte1u2 = GetPunkteFromVerhoer(st1, st2, 25, i);
                     punkte[0] = punkte1u2[0] * 4;
                     punkte[1] = punkte1u2[1] * 4;
+                    statistics.Add(new object[] { "Strategie 1 vs. Strategie 2 (mittel)", punkte1u2[0] * 4, punkte1u2[1] * 4 });
                 }
                 else
                 {
                     punkte1u2 = GetPunkteFromVerhoer(st1, st2, 100, i);
                     punkte[0] = punkte1u2[0];
                     punkte[1] = punkte1u2[1];
+                    statistics.Add(new object[] { "Strategie 1 vs. Strategie 2 (schwer)", punkte1u2[0], punkte1u2[1] });
                 }
             }
             for(int i = 0; i < 3; i++)
@@ -140,18 +144,21 @@ namespace Gefangenendilemma
                     punkte1u3 = GetPunkteFromVerhoer(st1, st3, 5, i);
                     punkte[0] = punkte1u3[0] * 20;
                     punkte[2] = punkte1u3[1] * 20;
+                    statistics.Add(new object[] { "Strategie 1 vs. Strategie 3 (leicht)", punkte1u3[0] * 20, punkte1u3[1] * 20 });
                 }
                 else if (i == 1)
                 {
                     punkte1u3 = GetPunkteFromVerhoer(st1, st3, 25, i);
                     punkte[0] = punkte1u3[0] * 4;
                     punkte[2] = punkte1u3[1] * 4;
+                    statistics.Add(new object[] { "Strategie 1 vs. Strategie 3 (mittel)", punkte1u3[0] * 4, punkte1u3[1] * 4 });
                 }
                 else
                 {
                     punkte1u3 = GetPunkteFromVerhoer(st1, st3, 100, i);
                     punkte[0] = punkte1u3[0];
                     punkte[2] = punkte1u3[1];
+                    statistics.Add(new object[] { "Strategie 1 vs. Strategie 3 (schwer)", punkte1u3[0], punkte1u3[1] });
                 }
             }
             for(int i = 0; i < 3; i++)
@@ -161,21 +168,25 @@ namespace Gefangenendilemma
                     punkte2u3 = GetPunkteFromVerhoer(st2, st3, 5, i);
                     punkte[1] = punkte2u3[0] * 20;
                     punkte[2] = punkte2u3[1] * 20;
+                    statistics.Add(new object[] { "Strategie 2 vs. Strategie 3 (leicht)", punkte2u3[0] * 20, punkte2u3[1] * 20 });
                 }
                 else if (i == 1)
                 {
                     punkte2u3 = GetPunkteFromVerhoer(st2, st3, 25, i);
                     punkte[1] = punkte2u3[0] * 4;
                     punkte[2] = punkte2u3[1] * 4;
+                    statistics.Add(new object[] { "Strategie 2 vs. Strategie 3 (mittel)", punkte2u3[0] * 4, punkte2u3[1] * 4 });
                 }
                 else
                 {
                     punkte2u3 = GetPunkteFromVerhoer(st2, st3, 100, i);
                     punkte[1] = punkte2u3[0];
                     punkte[2] = punkte2u3[1];
+                    statistics.Add(new object[] { "Strategie 2 vs. Strategie 3 (schwer)", punkte2u3[0], punkte2u3[1] });
                 }
             }
             ErmittleSieger(punkte);
+            StatistikEinsehen(statistics);
         }
         private static void ErmittleSieger(int[] punkte)
         {
@@ -260,6 +271,17 @@ namespace Gefangenendilemma
                 Console.WriteLine($"Team-Strategie 1 belegt Platz {platzST1} mit {pktST1} Punkten.");
                 Console.WriteLine($"Team-Strategie 2 belegt Platz {platzST2} mit {pktST2} Punkten.");
                 Console.WriteLine($"Team-Strategie 3 belegt Platz {platzST3} mit {pktST3} Punkten.");
+            }
+        }
+        private static void StatistikEinsehen(List<object[]> stats)
+        {
+            Console.Write("Wollen Sie die Statistik zum Turnier einsehen? (0 = nein, 1 = ja)");
+            if (Convert.ToBoolean(int.Parse(Console.ReadLine())) == true)
+            {
+                foreach(object[] round in stats)
+                {
+                    Console.WriteLine($"{round[0]}: {round[1]} | {round[2]}");
+                }
             }
         }
 
