@@ -21,7 +21,7 @@ namespace Gefangenendilemma
             _strategien.Add(new GrollStrategie());
             _strategien.Add(new VerrateImmerStrategie());
             _strategien.Add(new Strategie_Jonas_Pfalzgraf());
-            _strategien.Add(new Strategie2());
+            _strategien.Add(new Strategie_Max_Matthiolius());
             _strategien.Add(new Strategie3());
             
             string eingabe;
