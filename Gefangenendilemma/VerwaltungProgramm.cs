@@ -106,6 +106,8 @@ namespace Gefangenendilemma
         {
             int st1, st2;
             int schwere;
+            int winCount1 = 0;
+            int winCount2 = 0;
 
             Console.WriteLine("Willkommen zum Best of 9 zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
@@ -118,7 +120,32 @@ namespace Gefangenendilemma
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
 
-            Verhoer(st1, st2, 9, schwere);
+            for (int i = 1; i < 9; i++)
+            {
+                int result = VerhoerReturn(st1, st2, 9, schwere);
+                switch (result)
+                {
+                    case 1:
+                        winCount1 += 1;
+                        break;
+                    case 2:
+                        winCount2 += 1;
+                        break;
+                }
+            }
+
+            if (winCount1 > winCount2)
+            {
+                Console.WriteLine("Der Spieler 1 hat mit {0} Runden gewonnen", winCount1);
+            }
+            else if (winCount1 == winCount2)
+            {
+                Console.WriteLine("Die beiden Spieler haben unentschieden gespielt");
+            }
+            else
+            {
+                Console.WriteLine("Der Spieler 2 hat mit {0} Runden gewonnen", winCount2);
+            }
         }
 
         /// <summary>
@@ -187,6 +214,72 @@ namespace Gefangenendilemma
             }
 
         }
+
+        /// <summary>
+        /// Startet ein Verhör zwischen der Strategie an der Position st1 und Position st2 über die Länge von runde und der Schwere schwere, Gibt den Gewinner Zurück
+        /// </summary>
+        /// <param name="st1"></param>
+        /// <param name="st2"></param>
+        /// <param name="runde"></param>
+        /// <param name="schwere"></param>
+        static int VerhoerReturn(int st1, int st2, int runde, int schwere)
+        {
+            //holt die beiden Strategien aus der Collection.
+            BasisStrategie strategie1 = _strategien[st1];
+            BasisStrategie strategie2 = _strategien[st2];
+
+            //setzt Startwerte
+            int reaktion1 = BasisStrategie.NochNichtVerhoert;
+            int reaktion2 = BasisStrategie.NochNichtVerhoert;
+            int punkte1 = 0, punkte2 = 0;
+
+            //beide Strategien über den Start informieren (Also es wird die Startmethode aufgerufen)
+            strategie1.Start(runde, schwere);
+            strategie2.Start(runde, schwere);
+
+            Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden.");
+
+            //start
+            for (int i = 0; i < runde; i++)
+            {
+                //beide verhören
+                int aktReaktion1 = strategie1.Verhoer(reaktion2);
+                int aktReaktion2 = strategie2.Verhoer(reaktion1);
+                // verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
+
+                //punkte berechnen                
+                switch (schwere)
+                {
+                    case 0:
+                        VerhoerLeichtPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+
+                    case 1:
+                        VerhoerMittelPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+
+                    case 2:
+                        VerhoerSchwerPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+                }
+
+                //reaktion für den nächsten durchlauf merken
+                reaktion1 = aktReaktion1;
+                reaktion2 = aktReaktion2;
+            }
+
+            //ausgabe
+            if (punkte1 < punkte2)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+
+        }
+
         /// <summary>
         /// Startet ein Verhör zwischen der Strategie an der Position st und dem Benutzer über die Länge von runde und der Schwere schwere
         /// </summary>
@@ -397,6 +490,7 @@ namespace Gefangenendilemma
                     s2 += 1;
 
                 }
+
 
                 prozentS1 = s1 / runde - draw;
                 prozentS2 = s2 / runde - draw;
