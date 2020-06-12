@@ -109,8 +109,6 @@ namespace Gefangenendilemma
         /// <param name="schwere"></param>
         static void Verhoer(int st1, int st2, int runde, int schwere)
         {
-            string _winRateProof;
-
             //holt die beiden Strategien aus der Collection.
             BasisStrategie strategie1 = _strategien[st1];
             BasisStrategie strategie2 = _strategien[st2];

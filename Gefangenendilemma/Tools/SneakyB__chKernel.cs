@@ -24,6 +24,7 @@ namespace Gefangenendilemma.Tools
         public int GetResult()
         {
             Thinking();
+            Console.WriteLine(_mood);
             return _decision;
         }
 
@@ -35,13 +36,12 @@ namespace Gefangenendilemma.Tools
 
         private int Betray()
         {
-            _mood  += 1;
+            _mood  += 2;
             return BasisStrategie.Verrat;
         }
 
         private int Cooperate()
         {
-            _mood -= 1;
             return BasisStrategie.Kooperieren;
         }
 
@@ -74,53 +74,60 @@ namespace Gefangenendilemma.Tools
                     if (_weight == BasisStrategie.VMittel)
                     {
                         _decision = Cooperate();
+                        break;
                     }
                     else if (_lastDecision == BasisStrategie.Verrat)
                     {
-                        _decision = Betray();                       
+                        _decision = Betray();
+                        break;
                     }
                     else
                     {
                         _decision = Cooperate();
+                        break;
                     }
 
-                    break;
                 case int _ when _round <= 50 && _round > 25:
 
                     if (_weight == BasisStrategie.VMittel)
                     {
                         _decision = Cooperate();
+                        break;
                     }
                     else if (_lastDecision == BasisStrategie.Verrat && _weight > 1)
                     {
                         _decision = Betray();
+                        break;
                     }
                     else if (_mood >= _round * 0.15)
                     {
                         _decision = Betray();
+                        break;
                     }
                     else
                     {
                         _decision = Cooperate();
+                        break;
                     }
 
-                    break;
                 case int _ when _round <= 100 && _round > 50:
 
                     if (_weight == BasisStrategie.VMittel)
                     {
                         _decision = Cooperate();
+                        break;
                     }
                     else if (_lastDecision == BasisStrategie.Verrat && _mood >= _round * 0.50)
                     {
                         _decision = Betray();
+                        break;
                     }
                     else
                     {
                         _decision = Cooperate();
+                        break;
                     }
 
-                    break;
                 default:
                     throw new Exception("Your software is so terrible that you should be ashamed!");
             }
