@@ -24,7 +24,7 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie_Jonas_Pfalzgraf());
             _strategien.Add(new Strategie_Max_Matthiolius());
             _strategien.Add(new Strategie_Fabian_Doepke());
-          
+
             string eingabe;
             do
             {
@@ -47,6 +47,7 @@ namespace Gefangenendilemma
                         break;
                     case "1":
                         ManAgainstMachine();
+                        break;
                     case "2":
                         BestOfNine();
                         break;
