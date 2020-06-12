@@ -12,19 +12,22 @@ namespace Gefangenendilemma.Tools
         private int _round;
         private int _weight;
         private int _mood;
-        
+        private int _moodCountPositive;
+        private int _moodCountNegative;
+
 
         public SneakyB__chKernel()
         {
             this._decision = 0;
             this._mood = 0;
+            this._moodCountPositive = 0;
+            this._moodCountNegative = 0;
         }
 
 
         public int GetResult()
         {
             Thinking();
-            Console.WriteLine(_mood);
             return _decision;
         }
 
@@ -32,11 +35,28 @@ namespace Gefangenendilemma.Tools
         {
             this._round = round;
             this._weight = weight;
+
+            if (_moodCountNegative < 3 && _moodCountPositive > 2)
+            {
+                _mood = 0;
+                _moodCountNegative = 0;
+                _moodCountPositive = 0;
+            }
+            if (_lastDecision == BasisStrategie.Verrat)
+            {
+                _moodCountNegative += 1;
+                _moodCountPositive -= 1;
+            }
+            if (_lastDecision == BasisStrategie.Kooperieren)
+            {
+                _moodCountPositive += 1;
+                _moodCountNegative -= 1;
+            }
         }
 
         private int Betray()
         {
-            _mood  += 2;
+            _mood += 2;
             return BasisStrategie.Verrat;
         }
 
@@ -51,7 +71,7 @@ namespace Gefangenendilemma.Tools
         }
 
         private void CheckForTraitor()
-        {            
+        {
             if (_lastDecision == BasisStrategie.Verrat)
             {
                 _mood += 1;
@@ -61,75 +81,59 @@ namespace Gefangenendilemma.Tools
         private void Thinking()
         {
             CheckForTraitor();
-            switch (_round)
+            switch (_weight)
             {
                 case 0:
-
-                    _decision = Betray();
-
+                    if (_round == 0)
+                    {
+                        _decision = Cooperate();
+                    }
+                    else
+                    {
+                        if (_moodCountPositive > _moodCountNegative)
+                        {
+                            _decision = Betray();
+                        }
+                        else
+                        {
+                            _decision = Cooperate();
+                        }
+                    }
                     break;
-
-                case int _ when _round <= 25:
-
-                    if (_weight == BasisStrategie.VMittel)
+                case 1:
+                    if (_round == 0)
                     {
                         _decision = Cooperate();
-                        break;
-                    }
-                    else if (_lastDecision == BasisStrategie.Verrat)
-                    {
-                        _decision = Betray();
-                        break;
                     }
                     else
                     {
-                        _decision = Cooperate();
-                        break;
+                        if (_moodCountPositive < _moodCountNegative && _mood > 4)
+                        {
+                            _decision = Betray();
+                        }
+                        else
+                        {
+                            _decision = Cooperate();
+                        }
                     }
-
-                case int _ when _round <= 50 && _round > 25:
-
-                    if (_weight == BasisStrategie.VMittel)
+                    break;
+                case 2:
+                    if (_round == 0)
                     {
                         _decision = Cooperate();
-                        break;
-                    }
-                    else if (_lastDecision == BasisStrategie.Verrat && _weight > 1)
-                    {
-                        _decision = Betray();
-                        break;
-                    }
-                    else if (_mood >= _round * 0.15)
-                    {
-                        _decision = Betray();
-                        break;
                     }
                     else
                     {
-                        _decision = Cooperate();
-                        break;
+                        if (_moodCountPositive > _moodCountNegative)
+                        {
+                            _decision = Betray();
+                        }
+                        else
+                        {
+                            _decision = Cooperate();
+                        }
                     }
-
-                case int _ when _round <= 100 && _round > 50:
-
-                    if (_weight == BasisStrategie.VMittel)
-                    {
-                        _decision = Cooperate();
-                        break;
-                    }
-                    else if (_lastDecision == BasisStrategie.Verrat && _mood >= _round * 0.50)
-                    {
-                        _decision = Betray();
-                        break;
-                    }
-                    else
-                    {
-                        _decision = Cooperate();
-                        break;
-                    }
-
-                default:
-                    throw new Exception("Your software is so terrible that you should be ashamed!");
+                    break;
             }
         }
     }

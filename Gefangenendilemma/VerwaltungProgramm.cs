@@ -31,7 +31,6 @@ namespace Gefangenendilemma
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Strategien");
                 Console.WriteLine("1 - 2 Strategien die 9 Spiele gegenander spielen und erst dann wird der Sieger gekürt");
-                Console.WriteLine("2 - Verhör zwischen 2 Strategien mit Sieges-Chancen Analyse");
                 Console.WriteLine("X - Beenden");
 
                 // Eingabe
@@ -136,14 +135,17 @@ namespace Gefangenendilemma
                 {
                     case 0:
                         VerhoerLeichtPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        // verhoerWahrsch(aktReaktion1, aktReaktion2);
                         break;
 
                     case 1:
                         VerhoerMittelPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        // verhoerWahrsch(aktReaktion1, aktReaktion2);
                         break;
 
                     case 2:
                         VerhoerSchwerPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        // verhoerWahrsch(aktReaktion1, aktReaktion2);
                         break;
                 }
 

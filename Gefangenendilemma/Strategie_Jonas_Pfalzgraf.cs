@@ -10,7 +10,7 @@ namespace Gefangenendilemma
         SneakyB__chKernel _decision = new SneakyB__chKernel();
         public override string Name()
         {
-            return "SneakyB__ch";
+            return "Sneaky";
         }
 
         public override string Autor()
