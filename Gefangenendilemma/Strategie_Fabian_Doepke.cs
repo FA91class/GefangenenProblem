@@ -46,24 +46,17 @@ namespace Gefangenendilemma
 
 			if (_runde == 0)
 			{
-				reaction = Verrat;
+				reaction = Kooperieren;
 			}
 			else
 			{
 				switch (_schwere)
 				{
 					case 0:
-						if (_runde == 0)
-						{
-							reaction = Kooperieren;
-						}
-						else
-						{
-							
 							if (_schweigen > _verrat) { reaction = Kooperieren; }
 							else if (_schweigen < _verrat) { reaction =  Verrat; }
 							else if (_schweigen == _verrat) { if (_runde % 2 == 1) { reaction = Kooperieren; } else { reaction = Verrat; } }
-						}
+						
 
 						break;
 					case 1:
