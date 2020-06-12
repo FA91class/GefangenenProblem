@@ -13,7 +13,7 @@ namespace Gefangenendilemma
         /// Diese Liste(Collection) enthält alle Gefangene/Strategien
         /// </summary>
         private static List<BasisStrategie> _strategien;
-        
+
         static void Main(string[] args)
         {
             //bekannt machen der ganzen strategien
@@ -21,9 +21,9 @@ namespace Gefangenendilemma
             _strategien.Add(new GrollStrategie());
             _strategien.Add(new VerrateImmerStrategie());
             _strategien.Add(new Strategie_Jonas_Pfalzgraf());
-            _strategien.Add(new Strategie2());
+            _strategien.Add(new Strategie_Fabian_Doepke());
             _strategien.Add(new Strategie3());
-            
+
             string eingabe;
             do
             {
@@ -32,7 +32,7 @@ namespace Gefangenendilemma
                 Console.WriteLine("0 - Verhör zwischen 2 Strategien");
                 Console.WriteLine("1 - 2 Strategien die 9 Spiele gegenander spielen und erst dann wird der Sieger gekürt");
                 Console.WriteLine("X - Beenden");
-                
+
                 // Eingabe
                 Console.Write("Treffen Sie ihre Option: ");
                 eingabe = Console.ReadLine();
@@ -62,7 +62,7 @@ namespace Gefangenendilemma
         {
             int st1, st2;
             int runde, schwere;
-            
+
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
             {
@@ -73,7 +73,7 @@ namespace Gefangenendilemma
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
-            
+
             Verhoer(st1, st2, runde, schwere);
         }
 
@@ -117,9 +117,9 @@ namespace Gefangenendilemma
             //beide Strategien über den Start informieren (Also es wird die Startmethode aufgerufen)
             strategie1.Start(runde, schwere);
             strategie2.Start(runde, schwere);
-            
+
             Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden.");
-            
+
             //start
             for (int i = 0; i < runde; i++)
             {
@@ -147,19 +147,19 @@ namespace Gefangenendilemma
                 reaktion1 = aktReaktion1;
                 reaktion2 = aktReaktion2;
             }
-            
+
             //ausgabe
             Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
             Console.WriteLine($"{strategie2.Name()} hat {punkte2} Punkte erhalten.");
             if (punkte1 < punkte2)
             {
                 Console.WriteLine("Somit hat {0} gewonnen.", strategie1.Name());
-            } 
+            }
             else
             {
                 Console.WriteLine("Somit hat {0} gewonnen.", strategie2.Name());
             }
-            
+
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Gefangenendilemma
                 punkte1 += 4;
                 punkte2 += 4;
                 return;
-            } 
+            }
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
             {
                 punkte1 += 0;
@@ -189,10 +189,10 @@ namespace Gefangenendilemma
                 punkte2 += 0;
                 return;
             }
-            
+
             punkte1 += 8;
             punkte2 += 8;
-            
+
         }
 
         /// <summary>
@@ -260,5 +260,53 @@ namespace Gefangenendilemma
             punkte2 += 6;
 
         }
+
+        static void verhoerWahrsch(int aktReaktion1, int aktReaktion2)
+        {
+            int runde = 0, draw = 0;
+            int s1=0, s2=0;
+            float prozentS1, prozentS2;
+            bool auswS1,auswS2;
+
+            do
+            {
+                runde += 1;
+                if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
+                {
+                    draw += 1;
+                  
+                }
+
+                if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
+                {
+                    s1 += 1;
+                }
+
+                if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
+                {
+                    s2 += 1;
+                   
+                }
+
+                prozentS1 = s1 / runde - draw;
+                prozentS2 = s2 / runde - draw;
+
+                auswS1 = (prozentS1 > 0.50);
+                auswS2 = (prozentS2 > 0.50);
+
+            } while (runde > 4 && auswS1 || auswS2);
+
+            if (auswS1)
+            {
+                Console.WriteLine("Strategie1 gewinnt in der {0} Runde.", runde);
+            }
+            else if (auswS2)
+            {
+                Console.WriteLine("Strategie2 gewinnt in der {0} Runde.", runde);
+            }
+            
+            }
+
+
+        }
     }
-}
