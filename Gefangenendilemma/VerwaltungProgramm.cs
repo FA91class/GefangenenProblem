@@ -30,6 +30,7 @@ namespace Gefangenendilemma
                 // Begrüßung
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Strategien");
+                Console.WriteLine("2 - Verhör zwischen Benutzer und Strategie");
                 Console.WriteLine("X - Beenden");
                 
                 // Eingabe
@@ -41,6 +42,9 @@ namespace Gefangenendilemma
                 {
                     case "0":
                         Gefangene2();
+                        break;
+                    case "2":
+                        ManAgainstMachine();
                         break;
                     case "X":
                         break;
@@ -71,6 +75,23 @@ namespace Gefangenendilemma
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", -1, 3);
             
             Verhoer(st1, st2, runde, schwere);
+        }
+
+        static void ManAgainstMachine()
+        {
+            int st;
+            int runde, schwere;
+
+            Console.WriteLine("Willkommen zum Verhör zwischen Nutzer und einer Strategie");
+            for (int i = 0; i < _strategien.Count; i++)
+            {
+                Console.WriteLine($"{i} - {_strategien[i].Name()}");
+            }
+            st = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die Strategie, gegen die Sie spielen wollen: ", 0, _strategien.Count);
+            runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
+
+            Verhoer(st, runde, schwere);
         }
 
         /// <summary>
@@ -137,6 +158,83 @@ namespace Gefangenendilemma
                 Console.WriteLine("Somit hat {0} gewonnen.", strategie2.Name());
             }
             
+        }
+        /// <summary>
+        /// Startet ein Verhör zwischen der Strategie an der Position st und dem Benutzer über die Länge von runde und der Schwere schwere
+        /// </summary>
+        /// <param name="st"></param>
+        /// <param name="runde"></param>
+        /// <param name="schwere"></param>
+        static void Verhoer(int st, int runde, int schwere)
+        {
+            //holt die Strategie aus der Collection.
+            BasisStrategie strategie = _strategien[st];
+
+            //setzt Startwerte
+            int reaktionUser = BasisStrategie.NochNichtVerhoert;
+            int reaktionCPU = BasisStrategie.NochNichtVerhoert;
+            int punkte1 = 0, punkte2 = 0;
+
+            //die Strategie über den Start informieren (Also es wird die Startmethode aufgerufen)
+            strategie.Start(runde, schwere);
+            if (runde == 1)
+                Console.WriteLine($"Verhör zwischen Benutzer und {strategie.Name()} für {runde} Runde.");
+            else
+                Console.WriteLine($"Verhör zwischen Benutzer und {strategie.Name()} für {runde} Runden.");
+
+            //start
+            for (int i = 0; i < runde; i++)
+            {
+                Console.WriteLine($"Runde {i + 1}");
+                //beide verhören
+                int aktReaktionUser;
+                switch (reaktionCPU)
+                {
+                    default:
+                        aktReaktionUser = VerwaltungKram.EingabeZahlMinMax($"Ihr Gegenüber wurde noch nicht verhöhrt. Geben Sie die Tat zu? (0 = Abstreiten, 1 = Gestehen)", 0, 2);
+                        break;
+                    case BasisStrategie.Kooperieren:
+                        aktReaktionUser = VerwaltungKram.EingabeZahlMinMax($"Ihr Gegenüber streitet die Tat ab. Geben Sie die Tat zu? (0 = Abstreiten, 1 = Gestehen)", 0, 2);
+                        break;
+                    case BasisStrategie.Verrat:
+                        aktReaktionUser = VerwaltungKram.EingabeZahlMinMax($"Ihr Gegenüber hat die Tat gestanden. Geben Sie die Tat zu? (0 = Abstreiten, 1 = Gestehen)", 0, 2);
+                        break;
+                }
+                int aktReaktionCPU = strategie.Verhoer(reaktionUser);
+
+                //punkte berechnen                
+                switch (schwere)
+                {
+                    case 0:
+                        VerhoerLeichtPunkte(aktReaktionUser, aktReaktionCPU, ref punkte1, ref punkte2);
+                        break;
+
+                    case 1:
+                        VerhoerMittelPunkte(aktReaktionUser, aktReaktionCPU, ref punkte1, ref punkte2);
+                        break;
+
+                    case 2:
+                        VerhoerSchwerPunkte(aktReaktionUser, aktReaktionCPU, ref punkte1, ref punkte2);
+                        break;
+                }
+
+                //reaktion für den nächsten durchlauf merken
+                reaktionUser = aktReaktionUser;
+                reaktionCPU = aktReaktionCPU;
+            }
+
+            //ausgabe
+            Console.WriteLine($"Benutzer hat {punkte1} Punkte erhalten.");
+            Console.WriteLine($"{strategie.Name()} hat {punkte2} Punkte erhalten.");
+            if (punkte1 < punkte2)
+            {
+                Console.WriteLine("Somit hat Benutzer gewonnen.");
+            }
+            else
+            {
+                Console.WriteLine("Somit hat {0} gewonnen.", strategie.Name());
+            }
+
         }
 
         /// <summary>
