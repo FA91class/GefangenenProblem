@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Gefangenendilemma.Basis;
 
 namespace Gefangenendilemma
@@ -129,23 +130,21 @@ namespace Gefangenendilemma
                 //beide verhören
                 int aktReaktion1 = strategie1.Verhoer(reaktion2);
                 int aktReaktion2 = strategie2.Verhoer(reaktion1);
+                // verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
 
                 //punkte berechnen                
                 switch (schwere)
                 {
                     case 0:
                         VerhoerLeichtPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                        // verhoerWahrsch(aktReaktion1, aktReaktion2);
                         break;
 
                     case 1:
                         VerhoerMittelPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                        // verhoerWahrsch(aktReaktion1, aktReaktion2);
                         break;
 
                     case 2:
                         VerhoerSchwerPunkte(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                        // verhoerWahrsch(aktReaktion1, aktReaktion2);
                         break;
                 }
 
@@ -267,12 +266,19 @@ namespace Gefangenendilemma
 
         }
 
-        static void verhoerWahrsch(int aktReaktion1, int aktReaktion2)
+        /// <summary>
+        /// Berechnet den Zeitpunkt, ab welchem eine Strategie zuverlässig gewinnt.
+        /// </summary>
+        /// <param name="aktReaktion1"></param>
+        /// <param name="aktReaktion2"></param>
+        /// <param name="name1"></param>
+        /// <param name="name2"></param>
+        static void verhoerWahrsch(int aktReaktion1, int aktReaktion2, string name1, string name2)
         {
             int runde = 0, draw = 0;
-            int s1=0, s2=0;
+            int s1 = 0, s2 = 0;
             float prozentS1, prozentS2;
-            bool auswS1,auswS2;
+            bool auswS1, auswS2;
 
             do
             {
@@ -280,7 +286,7 @@ namespace Gefangenendilemma
                 if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
                 {
                     draw += 1;
-                  
+
                 }
 
                 if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
@@ -291,7 +297,7 @@ namespace Gefangenendilemma
                 if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
                 {
                     s2 += 1;
-                   
+
                 }
 
                 prozentS1 = s1 / runde - draw;
@@ -304,15 +310,13 @@ namespace Gefangenendilemma
 
             if (auswS1)
             {
-                Console.WriteLine("Strategie1 gewinnt in der {0} Runde.", runde);
+                Console.WriteLine("{0} gewinnt in der {1} Runde.", runde, name1);
             }
             else if (auswS2)
             {
-                Console.WriteLine("Strategie2 gewinnt in der {0} Runde.", runde);
+                Console.WriteLine("{0} gewinnt in der {1} Runde.", runde, name2);
             }
-            
-            }
-
 
         }
     }
+}
