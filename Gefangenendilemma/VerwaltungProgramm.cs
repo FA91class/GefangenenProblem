@@ -697,7 +697,7 @@ namespace Gefangenendilemma
             {
                 Console.WriteLine("{0} gewinnt in der {1} Runde.", strategie2.Name(), runde);
             }
-            else (Console.WriteLine("Keine der beiden Strategien gewinnt mit Sicherheit");
+            else (Console.WriteLine("Keine der beiden Strategien gewinnt mit Sicherheit"));
 
             rundeNr = 0;
 
