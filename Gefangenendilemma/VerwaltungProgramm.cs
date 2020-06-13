@@ -387,7 +387,7 @@ namespace Gefangenendilemma
                 //beide verhören
                 int aktReaktion1 = strategie1.Verhoer(reaktion2);
                 int aktReaktion2 = strategie2.Verhoer(reaktion1);
-                // verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
+                verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
 
                 //punkte berechnen                
                 switch (schwere)
@@ -454,7 +454,7 @@ namespace Gefangenendilemma
                 //beide verhören
                 int aktReaktion1 = strategie1.Verhoer(reaktion2);
                 int aktReaktion2 = strategie2.Verhoer(reaktion1);
-                // verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
+                verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
 
                 //punkte berechnen                
                 switch (schwere)
@@ -697,7 +697,7 @@ namespace Gefangenendilemma
             {
                 Console.WriteLine("{0} gewinnt in der {1} Runde.", strategie2.Name(), runde);
             }
-            else (Console.WriteLine("Keine der beiden Strategien gewinnt mit Sicherheit");
+            else (Console.WriteLine("Keine der beiden Strategien gewinnt mit Sicherheit"));
 
             rundeNr = 0;
 
