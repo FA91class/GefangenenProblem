@@ -34,6 +34,7 @@ namespace Gefangenendilemma
                 Console.WriteLine("1 - Verhör zwischen Benutzer und Strategie");
                 Console.WriteLine("2 - 2 Strategien die 9 Spiele gegenander spielen und erst dann wird der Sieger gekürt");
                 Console.WriteLine("3 - Turnier zwischen den 3 Strategien des Teams");
+                Console.WriteLine("4 -  Analyse von 2 Strategien");
                 Console.WriteLine("X - Beenden");
 
                 // Eingabe
@@ -54,6 +55,9 @@ namespace Gefangenendilemma
                         break;
                     case "3":
                         TournamentMode();
+                        break;
+                    case "4":
+                        Gefangene3();
                         break;
                     case "X":
                         break;
@@ -84,6 +88,25 @@ namespace Gefangenendilemma
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
 
             Verhoer(st1, st2, runde, schwere);
+        }
+
+        static void Gefangene3()
+        {
+            int st1, st2;
+            int runde, schwere;
+
+            Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
+            for (int i = 0; i < _strategien.Count; i++)
+            {
+                Console.WriteLine($"{i} - {_strategien[i].Name()}");
+            }
+            Console.WriteLine("Wählen Sie ihre 2 Strategien:");
+            st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
+            st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
+            runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
+
+            InteroLyse(st1, st2, runde, schwere);
         }
 
         static void ManAgainstMachine()
@@ -364,7 +387,6 @@ namespace Gefangenendilemma
                 //beide verhören
                 int aktReaktion1 = strategie1.Verhoer(reaktion2);
                 int aktReaktion2 = strategie2.Verhoer(reaktion1);
-                // verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
 
                 //punkte berechnen                
                 switch (schwere)
@@ -431,7 +453,6 @@ namespace Gefangenendilemma
                 //beide verhören
                 int aktReaktion1 = strategie1.Verhoer(reaktion2);
                 int aktReaktion2 = strategie2.Verhoer(reaktion1);
-                // verhoerWahrsch(aktReaktion1, aktReaktion2, strategie1.Name(), strategie2.Name());
 
                 //punkte berechnen                
                 switch (schwere)
@@ -591,6 +612,97 @@ namespace Gefangenendilemma
         }
 
         /// <summary>
+        /// Berechnet den Zeitpunkt, ab welchem eine Strategie zuverlässig gewinnt.
+        /// </summary>
+        /// <param name="aktReaktion1"></param>
+        /// <param name="aktReaktion2"></param>
+        /// <param name="name1"></param>
+        /// <param name="name2"></param>
+
+        static void InteroLyse(int st1, int st2, int runde, int schwere)
+        {
+                //holt die beiden Strategien aus der Collection.
+                BasisStrategie strategie1 = _strategien[st1];
+                BasisStrategie strategie2 = _strategien[st2];
+
+                //setzt Startwerte
+                int reaktion1 = BasisStrategie.NochNichtVerhoert;
+                int reaktion2 = BasisStrategie.NochNichtVerhoert;
+
+                //beide Strategien über den Start informieren (Also es wird die Startmethode aufgerufen)
+                strategie1.Start(runde, schwere);
+                strategie2.Start(runde, schwere);
+
+                Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden.");
+
+            //start
+            int rundeNr = 0, draw = 0;
+            int s1 = 0, s2 = 0;
+            float prozentS1= 0 , prozentS2 = 0;
+            bool auswS1 = false, auswS2 = false;
+
+            do
+            {
+                int aktReaktion1 = strategie1.Verhoer(reaktion2);
+                int aktReaktion2 = strategie2.Verhoer(reaktion1);
+
+                rundeNr += 1;
+                if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
+                {
+                    draw += 1;
+
+                }
+
+                if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
+                {
+                    s1 += 1;
+                }
+
+                if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
+                {
+                    s2 += 1;
+
+                }
+
+                try
+                {
+                    prozentS1 = s1 / rundeNr - draw;
+                    prozentS2 = s2 / rundeNr - draw;
+
+                    
+                }
+
+
+                catch (Exception) { }
+
+                auswS1 = (prozentS1 > 0.50);
+                auswS2 = (prozentS2 > 0.50);
+
+
+                reaktion1 = aktReaktion1;
+                reaktion2 = aktReaktion2;
+
+                if (rundeNr == runde){ break; }
+
+
+            } while (!((rundeNr < 4) && (auswS1 || auswS2)));
+
+            if (auswS1)
+            {
+                Console.WriteLine("{0} gewinnt in der {1} Runde.", strategie1.Name(), runde);
+            }
+            else if (auswS2)
+            {
+                Console.WriteLine("{0} gewinnt in der {1} Runde.", strategie2.Name(), runde);
+            }
+            else Console.WriteLine("Keine der beiden Strategien gewinnt mit Sicherheit");
+
+            rundeNr = 0;
+
+        }
+        
+
+        /// <summary>
         /// Berechnet für schwere Verstöße die Punkte und verwendet die 2 letzten Eingabeparameter als Rückgabe
         /// </summary>
         /// <param name="aktReaktion1"></param>
@@ -689,58 +801,6 @@ namespace Gefangenendilemma
 
         }
 
-        /// <summary>
-        /// Berechnet den Zeitpunkt, ab welchem eine Strategie zuverlässig gewinnt.
-        /// </summary>
-        /// <param name="aktReaktion1"></param>
-        /// <param name="aktReaktion2"></param>
-        /// <param name="name1"></param>
-        /// <param name="name2"></param>
-        static void verhoerWahrsch(int aktReaktion1, int aktReaktion2, string name1, string name2)
-        {
-            int runde = 0, draw = 0;
-            int s1 = 0, s2 = 0;
-            float prozentS1, prozentS2;
-            bool auswS1, auswS2;
-
-            do
-            {
-                runde += 1;
-                if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Kooperieren)
-                {
-                    draw += 1;
-
-                }
-
-                if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
-                {
-                    s1 += 1;
-                }
-
-                if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
-                {
-                    s2 += 1;
-
-                }
-
-
-                prozentS1 = s1 / runde - draw;
-                prozentS2 = s2 / runde - draw;
-
-                auswS1 = (prozentS1 > 0.50);
-                auswS2 = (prozentS2 > 0.50);
-
-            } while (runde > 4 && auswS1 || auswS2);
-
-            if (auswS1)
-            {
-                Console.WriteLine("{0} gewinnt in der {1} Runde.", runde, name1);
-            }
-            else if (auswS2)
-            {
-                Console.WriteLine("{0} gewinnt in der {1} Runde.", runde, name2);
-            }
-
-        }
+     
     }
 }
